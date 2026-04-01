@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Smartbank - O banco inteligente para você</title>
+
+    <script>
+      const bank = new URLSearchParams(window.location.search).get('bank');
+      const names = {
+        santander: 'Santander',
+        nubank: 'Nubank',
+        inter: 'Inter',
+        mercadopago: 'Mercado Pago',
+        itau: 'Itaú',
+        bradesco: 'Bradesco'
+      };
+      const icons = {
+        santander: 'https://www.google.com/s2/favicons?domain=santander.com.br&sz=256',
+        nubank: 'https://github.com/nubank.png',
+        inter: 'https://www.google.com/s2/favicons?domain=bancointer.com.br&sz=256',
+        mercadopago: 'https://www.google.com/s2/favicons?domain=mercadopago.com.br&sz=256',
+        itau: 'https://images.dualite.app/d52f60de-2692-4885-8c36-cb03ccdd56d7/asset-cf457b12-f8ae-4fc5-9b06-93bc68304e05.webp',
+        bradesco: 'https://www.google.com/s2/favicons?domain=bradesco.com.br&sz=256'
+      };
+      
+      if (bank && names[bank]) {
+        document.title = names[bank];
+        
+        const metaTitle = document.createElement('meta');
+        metaTitle.name = 'apple-mobile-web-app-title';
+        metaTitle.content = names[bank];
+        document.head.appendChild(metaTitle);
+        
+        const metaApp = document.createElement('meta');
+        metaApp.name = 'application-name';
+        metaApp.content = names[bank];
+        document.head.appendChild(metaApp);
+        
+        const linkIcon = document.createElement('link');
+        linkIcon.rel = 'apple-touch-icon';
+        linkIcon.href = icons[bank];
+        document.head.appendChild(linkIcon);
+      }
+    </script>
+
+    <meta name="description" content="Acesse sua conta Smartbank e gerencie seus bancos favoritos em um só lugar com segurança e agilidade." />
+    <meta name="author" content="Smartbank" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Smartbank - O banco inteligente para você" />
+    <meta property="og:description" content="Gerencie suas finanças com a inteligência do Smartbank. Multi-bancos em uma única interface." />
+    <meta property="og:image:alt" content="Logo do Smartbank" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Smartbank - O banco inteligente para você" />
+    <meta name="twitter:description" content="Gerencie suas finanças com a inteligência do Smartbank. Multi-bancos em uma única interface." />
+
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="icon" href="https://images.dualite.app/d52f60de-2692-4885-8c36-cb03ccdd56d7/icon-96ba4374-20d4-45c6-ad59-9e436d21027e.webp" />
+    <link rel="apple-touch-icon" href="https://images.dualite.app/d52f60de-2692-4885-8c36-cb03ccdd56d7/icon-96ba4374-20d4-45c6-ad59-9e436d21027e.webp" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FinancialService",
+      "name": "Smartbank",
+      "description": "O banco inteligente para você",
+      "url": "https://smartbank.dualite.app"
+    }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

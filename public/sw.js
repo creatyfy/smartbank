@@ -1,17 +1,21 @@
-const CACHE_NAME = 'smartbank-v5';
+const CACHE_NAME = 'smartbank-v8';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png'
+  '/manifest.json'
 ];
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
+      // O Promise.all com .catch garante que se um arquivo falhar, 
+      // o Service Worker continua a instalação normalmente.
+      return Promise.all(
+        ASSETS_TO_CACHE.map(url => {
+          return cache.add(url).catch(err => console.warn('Falha ao fazer cache de:', url));
+        })
+      );
     })
   );
 });

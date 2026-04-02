@@ -6,13 +6,20 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
+      // Usa o sw.js customizado da pasta public
+      strategies: 'injectManifest',
+      srcDir: 'public',
+      filename: 'sw.js',
       registerType: 'autoUpdate',
+      // Não gerar manifest automático, usar o nosso
       manifest: false,
-      workbox: {
+      injectManifest: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff2}'],
+        injectionPoint: undefined,
       },
       devOptions: {
         enabled: false,
+        type: 'module',
       },
     }),
   ],

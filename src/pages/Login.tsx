@@ -68,10 +68,6 @@ export function Login() {
         .eq('id', userId)
         .single();
 
-      console.log('Profile encontrado:', profile);
-      console.log('Profile error:', profileError);
-      console.log('is_admin:', profile?.is_admin);
-
       if (profileError || !profile) {
         setError('Acesso não autorizado. Entre em contato com o suporte.');
         await supabase.auth.signOut();
@@ -120,8 +116,6 @@ export function Login() {
       });
 
       if (signInError) {
-        console.error("Erro do Supabase Auth:", signInError);
-        
         if (signInError.message.includes('Invalid login credentials')) {
           setError('E-mail ou senha incorretos.');
         } else if (signInError.message.includes('Email not confirmed')) {
@@ -139,7 +133,6 @@ export function Login() {
         await handlePostLogin(data.session.user.id);
       }
     } catch (err: any) {
-      console.error("Erro capturado no catch:", err);
       if (err.message === 'Failed to fetch' || err.name === 'TypeError') {
         setError('Bloqueio de rede. Clique em "Publish" no topo da tela para testar.');
       } else {
@@ -150,7 +143,14 @@ export function Login() {
   };
 
   const handleInstallClick = () => {
-    setShowInstallModal(true);
+    if (deferredPrompt) {
+      // Dispara o prompt nativo do Android
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(() => setDeferredPrompt(null));
+    } else {
+      // Fallback: Mostra o modal de instruções manuais
+      setShowInstallModal(true);
+    }
   };
 
   return (

@@ -2,6 +2,9 @@
   command = "npm install && npm run build"
   publish = "dist"
 
+[build.environment]
+  NODE_VERSION = "20"
+
 [[headers]]
   for = "/manifest.json"
   [headers.values]
@@ -13,11 +16,6 @@
   [headers.values]
     Content-Type = "application/javascript"
     Cache-Control = "no-cache"
-
-[[headers]]
-  for = "/icon.png"
-  [headers.values]
-    Cache-Control = "public, max-age=86400"
 
 [[redirects]]
   from = "/*"

@@ -12,13 +12,25 @@
       "src": "https://images.dualite.app/d52f60de-2692-4885-8c36-cb03ccdd56d7/icon-96ba4374-20d4-45c6-ad59-9e436d21027e.webp",
       "sizes": "192x192",
       "type": "image/webp",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "https://images.dualite.app/d52f60de-2692-4885-8c36-cb03ccdd56d7/icon-96ba4374-20d4-45c6-ad59-9e436d21027e.webp",
       "sizes": "512x512",
       "type": "image/webp",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "https://images.dualite.app/d52f60de-2692-4885-8c36-cb03ccdd56d7/icon-96ba4374-20d4-45c6-ad59-9e436d21027e.webp",
+      "sizes": "192x192",
+      "type": "image/webp",
+      "purpose": "maskable"
+    },
+    {
+      "src": "https://images.dualite.app/d52f60de-2692-4885-8c36-cb03ccdd56d7/icon-96ba4374-20d4-45c6-ad59-9e436d21027e.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "maskable"
     }
   ]
 }

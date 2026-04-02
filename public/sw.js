@@ -1,11 +1,12 @@
-const CACHE_NAME = 'smartbank-v2';
+const CACHE_NAME = 'smartbank-v5';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
-  '/manifest.json'
+  '/manifest.json',
+  '/icon-192.png',
+  '/icon-512.png'
 ];
 
-// Instalação: Salva os arquivos essenciais no cache para passar no teste offline do Android
 self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
@@ -17,7 +18,6 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   self.clients.claim();
-  // Limpa caches antigos
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
@@ -31,7 +31,6 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Intercepta as requisições: Tenta a rede, se falhar (offline), pega do cache
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   
@@ -41,7 +40,6 @@ self.addEventListener('fetch', (event) => {
         if (response) {
           return response;
         }
-        // Fallback para a página inicial se for uma navegação
         if (event.request.mode === 'navigate') {
           return caches.match('/');
         }

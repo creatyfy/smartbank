@@ -12,6 +12,7 @@ export function InstallBankPrompt({ bankName, themeColor, logoUrl }: InstallBank
   const [isStandalone, setIsStandalone] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
+  const [isAndroid, setIsAndroid] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
   useEffect(() => {
@@ -20,7 +21,10 @@ export function InstallBankPrompt({ bankName, themeColor, logoUrl }: InstallBank
       return window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true;
     };
     setIsStandalone(checkStandalone());
-    setIsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream);
+    
+    const ua = navigator.userAgent;
+    setIsIOS(/iPad|iPhone|iPod/.test(ua) && !(window as any).MSStream && !/android/i.test(ua));
+    setIsAndroid(/android/i.test(ua));
 
     const handleBeforeInstallPrompt = (e: any) => {
       e.preventDefault();
@@ -32,12 +36,12 @@ export function InstallBankPrompt({ bankName, themeColor, logoUrl }: InstallBank
   }, []);
 
   const handleInstallClick = () => {
-    if (isIOS) {
-      setShowModal(true);
-    } else if (deferredPrompt) {
+    if (deferredPrompt) {
+      // Dispara o prompt nativo do Android
       deferredPrompt.prompt();
       deferredPrompt.userChoice.then(() => setDeferredPrompt(null));
     } else {
+      // Fallback: Mostra o modal de instruções manuais
       setShowModal(true);
     }
   };
@@ -68,7 +72,7 @@ export function InstallBankPrompt({ bankName, themeColor, logoUrl }: InstallBank
         </button>
       </motion.div>
 
-      {/* Modal de Instruções (Principalmente para iOS) */}
+      {/* Modal de Instruções */}
       <AnimatePresence>
         {showModal && (
           <motion.div
@@ -89,7 +93,9 @@ export function InstallBankPrompt({ bankName, themeColor, logoUrl }: InstallBank
               <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center gap-3">
                   <img src={logoUrl} alt={bankName} className="w-8 h-8 rounded-md" />
-                  <h3 className="text-xl font-bold text-gray-900">Instalar {bankName}</h3>
+                  <h3 className="text-xl font-bold text-gray-900">
+                    {isAndroid ? `Instalar ${bankName}` : `Instalar ${bankName}`}
+                  </h3>
                 </div>
                 <button onClick={() => setShowModal(false)} className="p-1 bg-gray-100 rounded-full">
                   <X className="w-5 h-5 text-gray-500" />
@@ -97,25 +103,47 @@ export function InstallBankPrompt({ bankName, themeColor, logoUrl }: InstallBank
               </div>
 
               <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center shrink-0">
-                    <Share className="w-5 h-5 text-[#007AFF]" />
-                  </div>
-                  <div>
-                    <p className="text-gray-900 font-medium text-sm">1. Toque em Compartilhar</p>
-                    <p className="text-gray-500 text-xs mt-1">Procure o ícone na barra inferior do seu navegador.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center shrink-0">
-                    <PlusSquare className="w-5 h-5 text-gray-700" />
-                  </div>
-                  <div>
-                    <p className="text-gray-900 font-medium text-sm">2. Adicionar à Tela de Início</p>
-                    <p className="text-gray-500 text-xs mt-1">Role para baixo nas opções e selecione esta opção para instalar o app.</p>
-                  </div>
-                </div>
+                {isAndroid ? (
+                  <>
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center shrink-0 text-lg font-bold">⋮</div>
+                      <div>
+                        <p className="text-gray-900 font-medium text-sm">1. Toque nos 3 pontinhos</p>
+                        <p className="text-gray-500 text-xs mt-1">No canto superior direito do Chrome.</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center shrink-0">
+                        <PlusSquare className="w-5 h-5 text-gray-700" />
+                      </div>
+                      <div>
+                        <p className="text-gray-900 font-medium text-sm">2. "Adicionar à tela inicial"</p>
+                        <p className="text-gray-500 text-xs mt-1">Role o menu para baixo e toque nessa opção.</p>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center shrink-0">
+                        <Share className="w-5 h-5 text-[#007AFF]" />
+                      </div>
+                      <div>
+                        <p className="text-gray-900 font-medium text-sm">1. Toque em Compartilhar</p>
+                        <p className="text-gray-500 text-xs mt-1">Procure o ícone na barra inferior do seu navegador.</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center shrink-0">
+                        <PlusSquare className="w-5 h-5 text-gray-700" />
+                      </div>
+                      <div>
+                        <p className="text-gray-900 font-medium text-sm">2. Adicionar à Tela de Início</p>
+                        <p className="text-gray-500 text-xs mt-1">Role para baixo nas opções e selecione esta opção para instalar o app.</p>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </motion.div>
           </motion.div>
